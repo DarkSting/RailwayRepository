@@ -20,14 +20,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 // routes
-app.use("/api/train", require("./routes/train"));
-app.use("/api/user", require("./routes/user"));
-app.use("/api/book", require("./routes/book"));
-app.use("/api/auth", require("./routes/auth"));
+app.use("/api/train", require("./Routes/TrainRoutes"));
+//app.use("/api/user", require("./routes/user"));
+//app.use("/api/book", require("./routes/book"));
+///app.use("/api/auth", require("./routes/auth"));
 
 // mongodb
 mongoose
-  .connect("mongodb://localhost:27017/railway", {
+  .connect("mongodb+srv://akash:akash123@cluster0.24bmwfn.mongodb.net/Train", {
     useCreateIndex: true,
     useUnifiedTopology: true,
     useNewUrlParser: true,
@@ -36,7 +36,7 @@ mongoose
   .catch((err) => console.log(err));
 
 //port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT|| 5000;
 
 //listen
-app.listen(PORT, () => console.log(`server started at ${PORT}`));
+app.listen(PORT, () => console.log(`server started at ${process.env.PORT}`));

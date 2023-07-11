@@ -1,5 +1,5 @@
 // loading necessary modules
-const {trainModel} = require("../Models/TrainModel");
+const {seatModel} = require("../Models/SeatModel");
 
 /*
 method: GET
@@ -8,16 +8,15 @@ description: returns all the trains
 */
 
 //adding trains 
-const addTrain = async(req,res)=>{
+const addSeat = async(req,res)=>{
 
   const{
-  name,
-  startpoint,
+    seatNumber,
+    seatOccupiedt,
   endpoint,
   price,
   seats,
-  totalSeats,
-trainNumber} = req.body;
+  totalSeats} = req.body;
 
   const newTrain = new trainModel({
     
@@ -26,7 +25,7 @@ trainNumber} = req.body;
     endpoint:endpoint,
     price:price,
     seats:seats,
-    trainNumber:trainNumber
+    totalSeats:totalSeats
 
   });
 
@@ -38,69 +37,6 @@ trainNumber} = req.body;
 
 
 }
-
-/**
-MEHTOD : POST
-ROUTE : api/train/putSeat 
-description : put a seat to a train this will be tracked to whether
-the seat is booked by a person
- */
-const putSeat = async (req, res) => {
-
-  const{
-    trainNumber,
-    typeNumber,
-    seatNumber
-
-  } = req.body
-
-  const array = ["c1","a1","s1"];
-
-  const isValid = typeNumber>array.length?false:true;
-
-  if(isNaN(trainNumber)){
-    res.status(404).json({msg:"train number not provided"})
-  }
-
-  try{
-  const foundTrain = await trainModel.findOne({trainNumber:trainNumber});
-
-  console.log(array[0])
- 
-
-
-  if (foundTrain) {
-
-    let uniqueSeatNumber = seatNumber;
-    let count = seatNumber;
-    while (
-      foundTrain.seats.find((seat) => seat.seatNumber === uniqueSeatNumber)
-    ) {
-      uniqueSeatNumber = seatNumber + count;
-      count++;
-    }
-
-    const seatData = {
-      seatNumber: uniqueSeatNumber,
-      seatOccupied: false,
-      seatType: isValid ? array[typeNumber] : array[2],
-    };
-    
-
-    await trainModel.updateOne({trainNumber:trainNumber},
-     {$push:{ "seats":seatData }} 
-      );
-
-   
-  } else {
-   res.status(404).json({ msg: "Train not found" });
-  }
-} catch (err) {
-  return res.status(500).json(err);
-}
-};
-
-
 
 const getTrains = async (req, res) => {
   await train
@@ -171,6 +107,4 @@ const deleteTrain = async (req, res) => {
     }));
 };
 
-module.exports = {
-  putSeat
-  ,getTrains, addTrain, getTrain, deleteTrain };
+module.exports = { getTrains, addTrain, getTrain, deleteTrain };

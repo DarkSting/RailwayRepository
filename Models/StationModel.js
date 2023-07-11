@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
-const {seatSchema} = require('./SeatModel');
 
-const bookingSchema = new mongoose.Schema({
-  refNo: {
+
+const stationSchema = new mongoose.Schema({
+  stationNumber: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "train",
   },
-  isPaid: {
-    type: Boolean,
+ location: {
+    type: String,
     default:false
   },
   totalPrice:{

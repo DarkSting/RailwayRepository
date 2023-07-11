@@ -1,15 +1,17 @@
 const router = require("express").Router();
 const {
   getTrains,
-  postTrain,
   getTrain,
   deleteTrain,
+  addTrain,
+  putSeat
 } = require("../Controllers/TrainControllers");
 const { isAdmin, isAuthenticated } = require("../middlewares/auth");
 
-router.get("/", getTrains);
-router.post("/", isAdmin, postTrain);
-router.get("/:id", getTrain);
-router.delete("/", isAdmin, deleteTrain);
+router.get("/getTrain", getTrains);
+router.post("/addTrain", addTrain);
+router.post("/putSeat", putSeat);
+router.get("/getTrain", getTrain);
+router.delete("/delTrain", deleteTrain);
 
 module.exports = router;

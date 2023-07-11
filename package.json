@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server"
   },
-  "author": "ashwinhprasad",
+  "author": "akash",
   "license": "ISC",
   "dependencies": {
     "cookie-parser": "^1.4.5",

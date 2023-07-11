@@ -25,13 +25,6 @@ const userSchema = new mongoose.Schema({
   unique:true
 
  },
- role:{
-  type:String,
-  
- },
-  is_admin: {
-    type: Boolean,
-  },
 
   DOB:{
     type:Date,
@@ -39,9 +32,17 @@ const userSchema = new mongoose.Schema({
   },
   createdAt:{
     type:Date,
-    
+
 
   }
 });
 
-module.exports = mongoose.model("user", userSchema);
+
+const UserModel = mongoose.model("trainUsers", userSchema);
+
+module.exports = {
+  
+  UserModel,
+  userSchema
+
+};

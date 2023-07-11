@@ -1,38 +1,62 @@
 const mongoose = require("mongoose");
+const{seatSchema,seatModel} = require('./SeatModel');
 
+//train schema 
 const TrainSchema = new mongoose.Schema({
   name: {
-    trim: true,
     type: String,
-    unique: true,
   },
-  users: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
-      required: false,
-    },
-  ],
-  destination: {
-    type: String,
-    maxlength: 100,
+  trainNumber:{
+    type:String,
+    required:[true,'provide name']
   },
   startpoint: {
     type: String,
     maxlength: 100,
   },
-  startDate: {
-    type: Date,
-  },
-  reachDate: {
-    type: Date,
+  destination:{
+    type: String,
+    maxlength: 100,
   },
   price: {
     type: Number,
   },
   seats:{
-    type:[]
+    type:[seatSchema],
+    required:[true,'seats not provided']
+  }
+  ,
+  totalSeats:{
+    type:Number,
+    default:0
+  
   }
 });
 
-module.exports = mongoose.model("train", TrainSchema);
+//before save the train into the database this will assign the total number of seats to the model
+TrainSchema.post('updateOne',function(next){
+
+  this.totalSeats = this.seats.length;
+  next();
+});
+
+TrainSchema.post('save',function(next){
+
+  this.totalSeats = this.seats.length;
+  next();
+});
+
+
+//static methods for database to add seats to the train
+TrainSchema.statics.addSeats = async function (seatNumber,seatOccupied,seatType,
+  createdAt){
+
+}
+
+ const trainModel=mongoose.model("train", TrainSchema);
+
+
+
+ module.exports = {
+  trainModel
+ }

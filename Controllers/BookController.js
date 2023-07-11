@@ -1,4 +1,4 @@
-const book = require("../models/book");
+/*const book = require("../models/book");
 const user = require("../models/user");
 const train = require("../models/trains");
 
@@ -7,6 +7,7 @@ method: POST
 route: /api/book/
 description: creates a booking
 */
+/*
 const createBook = async (req, res) => {
   // details from body
   const { train_id, user_id } = req.body;
@@ -50,6 +51,7 @@ method: GET
 route: /api/book/
 description: gets all bookings
 */
+/*
 const getBooks = (req, res) => {
   book
     .find()
@@ -66,7 +68,7 @@ const getBooks = (req, res) => {
 method: DELETE
 route: /api/book/:id
 description: deletes a booking
-*/
+*//*
 const deleteBook = async (req, res) => {
   const { id } = req.params;
 
@@ -108,6 +110,8 @@ method: GET
 route: /api/book/:id
 description: gets a single booking
 */
+
+/*
 const getBook = async (req, res) => {
   const { id } = req.params;
 
@@ -122,4 +126,4 @@ const getBook = async (req, res) => {
   });
 };
 
-module.exports = { createBook, getBooks, deleteBook, getBook };
+module.exports = { createBook, getBooks, deleteBook, getBook };*/

@@ -3,29 +3,27 @@ const mongoose = require("mongoose");
 const scheduleSchema = new mongoose.Schema({
   refNo: {
     type: String,
-    ref: "train",
+    unique:[true,'please provide a unique number']
   },
-  isPaid: {
-    type: mongoose.Schema.Types.ObjectId,
-    defaul:false
-  },
-  bookedSeats:{
-    type:Number,
-    required:true
-  },
-  totalPrice:{
-    type:Number,
-
+  
+  journey:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'train'
   }
   ,
-  bookedDate:{
+  estTimeForComplete:{
+    type:Number,
+    required:[true,'Completion time is not provided']
+  },
+
+ createdAt:{
     type:Date.now,
   },
-  bookedPerson:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:'users'
+  
+  stops:{
+    type:[]
   }
 
 });
 
-module.exports = mongoose.model("bookings", scheduleSchema);
+module.exports = mongoose.model("schedule", scheduleSchema);

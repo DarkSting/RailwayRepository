@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const seatSchema = new mongoose.Schema({
   seatNumber: {
     type: Number,
-    required:[true,'seat number provided']
+    required:[true,'seat number not provided'],
+    unique:[true,'provide a unique seat number']
     
   },
   seatOccupied: {
@@ -12,17 +13,25 @@ const seatSchema = new mongoose.Schema({
   },
   seatType:{
     type:String,
-    required:[true,'seat type not provided']
+    required:[true,'seat type not provided'],
+    enum:["c1","a1","s1"]
   }
   ,
   createdAt:{
     type:Date,
+    default:Date.now
     
+
+  },
+  lastSeatNumber:{
+    type:Number,
 
   }
 });
 
-const seatModel = mongoose.model("user", seatSchema);
+
+
+const seatModel = mongoose.model("seat", seatSchema);
 
 module.exports = {
 

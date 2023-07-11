@@ -1,46 +1,28 @@
 const mongoose = require("mongoose");
 
 const loyaltySchema = new mongoose.Schema({
-  points: {
-    type:Number,
-    default:0
+  tier: {
+    type: Number,
+    default: 1,
   },
-  name: {
-    type: String,
-    maxlength: 100,
-    unique: true,
+  discount: {
+    type: Number,
+    default: 10,
   },
-  encry_password: {
-    type: String,
-  },
-  phone: {
-    type: String,
-    trim: true,
-    unique: true,
-  },
-   nic:{
-  type:String,
-  required:true,
-  unique:true
-
- },
- role:{
-  type:String,
-  
- },
-  is_admin: {
+  priorityBooking: {
     type: Boolean,
+    default: true,
+  },
+  loungeAccess: {
+    type: Boolean,
+    default: true,
+  },
+  rewardPointsPerDollar: {
+    type: Number,
+    default: 1000,
   },
 
-  DOB:{
-    type:Date,
 
-  },
-  createdAt:{
-    type:Date,
-    
-
-  }
 });
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("loyalty", loyaltySchema);
