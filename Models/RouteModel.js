@@ -36,7 +36,7 @@ startPoint:{
 });
 
 
-const UserModel = mongoose.model("user", userSchema);
+const UserModel = mongoose.model("routes", userSchema);
 
 module.exports = {
   

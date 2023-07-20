@@ -21,9 +21,13 @@ const scheduleSchema = new mongoose.Schema({
   },
   
   stops:{
-    type:[]
+    type:[{
+      type:mongoose.Schema.Types.ObjectId,
+      required:[true,'provide stops'],
+      ref:'stations'
+    }]
   }
 
 });
 
-module.exports = mongoose.model("schedule", scheduleSchema);
+module.exports = mongoose.model("schedules", scheduleSchema);

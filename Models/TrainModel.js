@@ -21,10 +21,11 @@ const TrainSchema = new mongoose.Schema({
   price: {
     type: Number,
   },
-  seats:{
-    type:[seatSchema],
-    required:[true,'seats not provided']
-  }
+  seats:[{
+    type:mongoose.Schema.Types.ObjectId,
+    required:[true],
+    ref:'seats'
+  }]
   ,
   totalSeats:{
     type:Number,

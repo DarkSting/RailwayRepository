@@ -31,7 +31,7 @@ const seatSchema = new mongoose.Schema({
 
 
 
-const seatModel = mongoose.model("seat", seatSchema);
+const seatModel = mongoose.model("seats", seatSchema);
 
 module.exports = {
 

@@ -30,4 +30,9 @@ const stationSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model("bookings", bookingSchema);
+const StationModel = mongoose.model("stations", stationSchema);
+
+module.exports = {
+  stationSchema,
+  StationModel
+}
