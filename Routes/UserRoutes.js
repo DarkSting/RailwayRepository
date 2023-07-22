@@ -7,10 +7,10 @@ const {
   returnCurrentUser,
 } = require("../Controllers/UserControllers");
 const { isAdmin, isAuthenticated } = require("../middlewares/auth");
-router.post("/", createUser);
-router.get("/:id", isAuthenticated, getUser);
-router.get("/", isAdmin, getAllUsers);
-router.delete("/:id", isAuthenticated, deleteUser);
+router.post("/adduser", createUser);
+router.get("/getuser", getUser);
+router.get("/getallusers", getAllUsers);
+router.delete("/deleteuser", deleteUser);
 router.get("/return/current", isAuthenticated, returnCurrentUser);
 
 module.exports = router;

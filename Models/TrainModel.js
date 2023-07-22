@@ -7,8 +7,8 @@ const TrainSchema = new mongoose.Schema({
     type: String,
   },
   trainNumber:{
-    type:String,
-    required:[true,'provide name']
+    type:Number,
+    required:[true,'provide number']
   },
   startpoint: {
     type: String,
@@ -18,13 +18,10 @@ const TrainSchema = new mongoose.Schema({
     type: String,
     maxlength: 100,
   },
-  price: {
-    type: Number,
-  },
-  seats:[{
+  trainBoxes:[{
     type:mongoose.Schema.Types.ObjectId,
     required:[true],
-    ref:'seats'
+    ref:'trainboxes'
   }]
   ,
   totalSeats:{
@@ -34,6 +31,27 @@ const TrainSchema = new mongoose.Schema({
   }
 });
 
+//model for train box
+const TrainBoxSchema = new mongoose.Schema({
+
+  trainBoxNumber:{
+    type:Number,
+    required:[true,'trainbox id not supplied']
+  },
+  capacity:{
+    type:Number,
+    default:0
+  },
+  seats:{
+    type:[Boolean]
+  }
+  ,
+  classOfBox:{
+    type:String
+  }
+
+})
+
 //before save the train into the database this will assign the total number of seats to the model
 TrainSchema.post('updateOne',function(next){
 
@@ -41,11 +59,6 @@ TrainSchema.post('updateOne',function(next){
   next();
 });
 
-TrainSchema.post('save',function(next){
-
-  this.totalSeats = this.seats.length;
-  next();
-});
 
 
 //static methods for database to add seats to the train
@@ -55,9 +68,10 @@ TrainSchema.statics.addSeats = async function (seatNumber,seatOccupied,seatType,
 }
 
  const trainModel=mongoose.model("train", TrainSchema);
-
+const trainBoxModel = mongoose.model("trainboxes",TrainBoxSchema);
 
 
  module.exports = {
-  trainModel
+  trainModel,
+  trainBoxModel
  }

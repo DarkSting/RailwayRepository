@@ -20,8 +20,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // routes
-app.use("/api/train", require("./Routes/TrainRoutes"));
-//app.use("/api/user", require("./routes/user"));
+app.use("/train", require("./Routes/TrainRoutes"));
+app.use("/user", require("./Routes/UserRoutes"));
 //app.use("/api/book", require("./routes/book"));
 ///app.use("/api/auth", require("./routes/auth"));
 

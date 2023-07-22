@@ -8,10 +8,10 @@ const {
 } = require("../Controllers/TrainControllers");
 const { isAdmin, isAuthenticated } = require("../middlewares/auth");
 
-router.get("/getTrain", getTrains);
-router.post("/addTrain", addTrain);
-router.post("/putSeat", putSeat);
-router.get("/getTrain", getTrain);
-router.delete("/delTrain", deleteTrain);
+router.get("/gettrain", getTrains);
+router.post("/addtrain", addTrain);
+router.post("/putseat", putSeat);
+router.get("/gettrain", getTrain);
+router.delete("/deletetrain", deleteTrain);
 
 module.exports = router;

@@ -9,7 +9,8 @@ const seatSchema = new mongoose.Schema({
   },
   seatOccupied: {
     type: Boolean,
-    required:[true,'seat state not provided']
+    required:[true,'seat state not provided'],
+    default:false
   },
   seatType:{
     type:String,
@@ -23,10 +24,7 @@ const seatSchema = new mongoose.Schema({
     
 
   },
-  lastSeatNumber:{
-    type:Number,
-
-  }
+ 
 });
 
 
