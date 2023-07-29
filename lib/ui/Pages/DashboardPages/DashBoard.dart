@@ -3,6 +3,8 @@ import 'package:login_flutter/ui/Pages/TrainPages/TrainPage.dart';
 import "package:login_flutter/ui/Theme/LightColor.dart";
 import "package:login_flutter/ui/Components/Header.dart";
 import "package:login_flutter/ui/Components/CircularContainer.dart";
+import "package:login_flutter/ui/Components/Spinners.dart";
+
 
 
 class Dashboard extends StatefulWidget {
@@ -44,7 +46,18 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    LoadingSpinner();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+
+
+
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,

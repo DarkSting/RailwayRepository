@@ -8,6 +8,9 @@ class LightColor {
 
   static const Color bottonTitleTextColor = const Color(0xffd4d4ea);
 
+  static const Color green = const Color(0xffA0C49D);
+  static const Color red =  const Color(0xffE60965);
+
   static const Color grey = Color(0xff9D99A7);
   static const Color darkgrey = Color(0xff625f6a);
 

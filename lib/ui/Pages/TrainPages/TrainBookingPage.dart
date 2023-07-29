@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:login_flutter/ui/Components/QuadClipper.dart';
 import 'package:login_flutter/ui/Components/Spinners.dart';
+import 'package:login_flutter/ui/Pages/DashboardPages/DashBoard.dart';
 import 'package:login_flutter/ui/Theme/LightColor.dart';
 import 'package:login_flutter/ui/Pages/LoginAndSignupPages/login.dart';
 import 'package:login_flutter/ui/Components/IncrementDecrementComponent.dart';
 import 'package:login_flutter/Models/TrainBookingModel.dart';
+import 'package:login_flutter/ui/Pages/PaymentPages/PaymentPage.dart';
 
 
 class TrainBookingPage extends StatefulWidget {
@@ -145,7 +147,6 @@ class _TrainBookingPageState extends State<TrainBookingPage> {
               Container(
 
                 height: widget.height,
-
                 child: Container(
                   alignment: Alignment.center,
                   child: Text("Total Price : ${widget.trainData.totalPrice}",style: Theme.of(context).textTheme.titleLarge,) ,
@@ -167,14 +168,23 @@ class _TrainBookingPageState extends State<TrainBookingPage> {
 
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async{
+                            PaymentFunction function = PaymentFunction();
 
+                            try{
+                              print(widget.trainData.passengers);
+                              await function.makePayment(widget.trainData.totalPrice);
+                              Navigator.pushReplacement(
+                                 context,
+                                 MaterialPageRoute(builder: (context) =>const Dashboard()),
+                                );
 
-                          Navigator.push(
+                            }catch(e){
+                              print(e);
+                            }
 
-                            context,
-                            MaterialPageRoute(builder: (context) =>const LoadingSpinner()),
-                          );
+                            print("hello akash is it working");
+                          
                         }
                         ,
                         child: const Text("Proceed to Payment"),
