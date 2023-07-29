@@ -22,12 +22,6 @@ const userSchema = new mongoose.Schema({
     trim: true,
     unique: true,
   },
-   nic:{
-  type:String,
-  required:true,
-  unique:true
-
- },
  firstName:{
   type:String,
   required:[true,'firstname is not provided']
@@ -39,6 +33,7 @@ const userSchema = new mongoose.Schema({
 
   DOB:{
     type:Date,
+    default:Date.now
 
   },
   createdAt:{

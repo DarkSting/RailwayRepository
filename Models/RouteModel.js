@@ -4,6 +4,7 @@ const routeSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
+    unique:[true,'this name already exists']
   },
   routeNumber: {
     type: String,
@@ -11,7 +12,7 @@ const routeSchema = new mongoose.Schema({
     unique: true,
     required:[true,'route number not set up']
   },
-startPoint:{
+  startPoint:{
   type:String,
   required:[true,'start point not set up']
 
@@ -23,24 +24,23 @@ startPoint:{
  },
   isClosed: {
     type: Boolean,
-  },
-  DOB:{
-    type:Date,
-
+    default:false
   },
   createdAt:{
     type:Date,
+    default:Date.now
 
 
   }
 });
 
 
-const UserModel = mongoose.model("routes", userSchema);
+
+
+const RouteModel = mongoose.model("routes", routeSchema);
 
 module.exports = {
   
-  UserModel,
-  userSchema
+  RouteModel,
 
 };

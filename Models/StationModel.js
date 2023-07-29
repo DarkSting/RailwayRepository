@@ -3,30 +3,28 @@ const mongoose = require("mongoose");
 
 const stationSchema = new mongoose.Schema({
   stationNumber: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "train",
+    type: String,
+    required:[true,'station number not provided']
+    
+  },
+  stationName:{
+    type:String,
+    required:[true,'station name not provided']
   },
  location: {
     type: String,
-    default:false
+    default:""
   },
-  totalPrice:{
-    type:Number,
-
-  }
-  ,
-  bookedDate:{
-    type:Date.now,
+  stationClass:{
+    type:String,
+    enum:stationEnum,
+    default:stationEnum[0]
   },
-  bookedSeats:{
-    type:[seatSchema],
-    required:[true ,'seats not provided']
-  },
-  bookedPerson:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:'users',
-    required:[true ,'booked person not provided']
-  }
+  bookings:[{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'bookings'
+    }]
+  
 
 });
 

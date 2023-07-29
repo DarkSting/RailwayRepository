@@ -53,11 +53,7 @@ const TrainBoxSchema = new mongoose.Schema({
 })
 
 //before save the train into the database this will assign the total number of seats to the model
-TrainSchema.post('updateOne',function(next){
 
-  this.totalSeats = this.seats.length;
-  next();
-});
 
 
 

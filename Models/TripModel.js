@@ -10,11 +10,11 @@ const TripSchema = new mongoose.Schema({
         required:[true,'train reference is required']
     },
     departure:{
-        type:Date,
+        type:String,
         required:[true,'departure time not provided']
     },
     arrival:{
-        type:Date,
+        type:String,
         required:[true,'arrival time not provided']
     },
     createdAt:{
@@ -25,9 +25,17 @@ const TripSchema = new mongoose.Schema({
         type:String,
         default:""
     },
+    route:{
+        type:String,
+        ref:'routes'
+    },
     Stops:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'stations'
     }]
 
 })
+
+const tripModel = mongoose.model('trips',TripSchema);
+
+module.exports = {tripModel};

@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
+
 // app config
 const app = express();
 
@@ -12,7 +13,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "DELETE"],
+    methods: ["GET", "POST", "DELETE","PUT"],
     credentials: true,
   })
 );
@@ -22,6 +23,7 @@ app.use(cookieParser());
 // routes
 app.use("/train", require("./Routes/TrainRoutes"));
 app.use("/user", require("./Routes/UserRoutes"));
+app.use("/payment", require("./Routes/PaymentRoute"));
 //app.use("/api/book", require("./routes/book"));
 ///app.use("/api/auth", require("./routes/auth"));
 

@@ -14,10 +14,11 @@ const createUser = async (req, res) => {
     nic,
     firstName,
     lastName,
-    DOB
+
 
 
 } = req.body
+
 try{
 
 var newUser = new UserModel({
@@ -27,8 +28,7 @@ var newUser = new UserModel({
     encry_password:password,
     firstName:firstName,
     lastName:lastName,
-    nic:nic,
-    DOB:DOB
+
      
 })
 
@@ -170,6 +170,8 @@ const returnCurrentUser = async (req, res) => {
     id: userExist._id,
   });
 };
+
+
 
 // exporting the modules
 module.exports = {

@@ -3,8 +3,7 @@ const {seatSchema} = require('./SeatModel');
 
 const bookingSchema = new mongoose.Schema({
   refNo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "train",
+    type: Number
   },
   isPaid: {
     type: Boolean,
@@ -12,22 +11,25 @@ const bookingSchema = new mongoose.Schema({
   },
   totalPrice:{
     type:Number,
-
-  }
-  ,
+  },
   bookedDate:{
-    type:Date.now,
+    type:Date,
+    default:Date.now
   },
   bookedSeats:{
-    type:[seatSchema],
+    type:[String],
     required:[true ,'seats not provided']
   },
   bookedPerson:{
     type: mongoose.Schema.Types.ObjectId,
     ref:'users',
-    required:[true ,'booked person not provided']
+    //required:[true ,'booked person not provided']
   }
 
 });
 
-module.exports = mongoose.model("bookings", bookingSchema);
+
+const BookingModel = mongoose.model("bookings", bookingSchema);
+
+module.exports = {BookingModel};
+
