@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:login_flutter/Models/TrainBookingModel.dart';
 import 'package:login_flutter/ui/Components/FileNotFoundError.dart';
 import 'package:login_flutter/Models/TrainBoxModel.dart';
+import 'package:login_flutter/ui/Components/Spinners.dart';
 import 'package:login_flutter/ui/Components/TrainBoxCard.dart';
+import 'package:login_flutter/ui/Pages/TrainPages/TrainBookingPage.dart';
 import 'package:login_flutter/ui/Theme/LightColor.dart';
+import 'dart:async';
 
 
+//train box page that displays train boxes details
 class TrainBoxPage extends StatefulWidget {
 
+  //train details
   final int trainID;
-
   final String destination;
 
   const TrainBoxPage({required this.trainID,this.destination="",super.key});
@@ -20,7 +25,9 @@ class TrainBoxPage extends StatefulWidget {
 class _TrainBoxPageState extends State<TrainBoxPage> {
 
 
+  //flags
   bool isPageLoaded = false;
+  bool isPageLoading = false;
   int _visibleItems=0;
   double _itemExtent=0.0;
   List<dynamic>? trainBoxList = [];
@@ -39,8 +46,13 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
 
   void _getData(){
 
-    trainBoxModel.populateTrainBoxes(trainNumber: widget.trainID).then((value) {
+    //set a timer to navigate to the not found page if the server not responds in specified seconds
 
+    //sending request to the backend
+    isPageLoading = true;
+    trainBoxModel.populateTrainBoxes(trainNumber: widget.trainID).then((value) {
+      isPageLoading = false;
+      //checks whether the trainbox list is null
     if(trainBoxList!=null){
       trainBoxList = trainBoxModel.receivedTrainBoxes;
       isPageLoaded = true;
@@ -53,6 +65,7 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
 
     }
     ).catchError((er){
+      isPageLoading = false;
         print("an error occured");
     });
 
@@ -66,7 +79,7 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
   Widget build(BuildContext context){
 
     print(isPageLoaded.toString()+" page status");
-    if (isPageLoaded) {
+    if (isPageLoaded && !isPageLoading) {
       print(trainBoxModel.receivedTrainBoxes);
       if (trainBoxModel?.receivedTrainBoxes?.isNotEmpty==true) {
         return Scaffold(
@@ -104,7 +117,16 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
                         );
                       }
                       else{
-
+                          Navigator.push(context,MaterialPageRoute(builder:
+                              (context)=>TrainBookingPage(
+                                  trainData: TrainBooking(
+                                    trainNumber:widget.trainID,
+                                    bookedSeats: reservedSeats,
+                                    seatPrice: 200
+                                  )
+                              )
+                          )
+                          );
                       }
 
 
@@ -147,6 +169,9 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
       }
 
 
+    }
+    else if(isPageLoading){
+      return Spinner();
     }
     return PageNotFound();
   }

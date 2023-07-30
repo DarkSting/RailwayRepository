@@ -17,6 +17,7 @@ class TrainBookingPage extends StatefulWidget {
   final double height = 60;
   TrainBooking trainData;
 
+
   @override
   State<TrainBookingPage> createState() => _TrainBookingPageState();
 }
@@ -40,6 +41,21 @@ class _TrainBookingPageState extends State<TrainBookingPage> {
     setState(() {
 
     });
+  }
+
+  List<Widget> _getReservedSeats(List<String> reservedSeats){
+
+    widget.trainData.totalPrice = widget.trainData.seatPrice * widget.trainData.bookedSeats.length;
+    print(widget.trainData.seatPrice * widget.trainData.passengers);
+
+    List<Widget> currentList =[];
+    if(reservedSeats.isNotEmpty==true){
+      for(int i=0;i<reservedSeats.length;i++){
+        currentList.add(Text("${reservedSeats[i]}",style: Theme.of(context).textTheme.titleMedium,) );
+      }
+     return currentList;
+    }
+    return currentList;
   }
 
   @override
@@ -102,7 +118,7 @@ class _TrainBookingPageState extends State<TrainBookingPage> {
                 child: Container(
                   alignment: Alignment.centerLeft,
                   margin: const EdgeInsets.only(left: 20),
-                  child: Text("passengers : ${widget.trainData.passengers}",style: Theme.of(context).textTheme.titleMedium,) ,
+                  child: Text("passengers : ${widget.trainData.bookedSeats.length}",style: Theme.of(context).textTheme.titleMedium,) ,
                 ),
               ),
 
@@ -125,8 +141,10 @@ class _TrainBookingPageState extends State<TrainBookingPage> {
                 ),
               ),
               const SizedBox(height: 10),
+
               Container(
-                height: widget.height,
+                
+                padding: EdgeInsets.all(30),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(
@@ -134,15 +152,11 @@ class _TrainBookingPageState extends State<TrainBookingPage> {
                       width:1.0,
                     )
                 ),
+                child: Column(
+                      children: _getReservedSeats(widget.trainData.bookedSeats),
+                    ),
 
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(left: 20),
-                  child: Text("Seat Type : ${widget.trainData.seatType}",style: Theme.of(context).textTheme.titleMedium,) ,
-                ),
               ),
-              const SizedBox(height: 10),
-              IncrementDecrementCard(title: "Seats Count",height: widget.height,bookingData: widget.trainData,callback: updateParentWidget,),
               const SizedBox(height: 30),
               Container(
 

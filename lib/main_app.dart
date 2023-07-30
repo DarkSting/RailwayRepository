@@ -30,7 +30,9 @@ class MainApp extends StatelessWidget {
         )
       ),
 
-       home:TrainBoxPage(trainID: 200),
+       home:Dashboard(),
+
+      //TrainBoxPage(trainID: 200),
       // SeatCard(buttonColor: LightColor.lightOrange,chipText1: "train 1",chipText2: "Book Train",context: "train card",
       //   primaryColor: Colors.white,),
       // TrainBookingPage(trainData: TrainBooking(passengers: 5,trainNumber: 200,bookedSeats: ["a1"],seatPrice: 200)),
