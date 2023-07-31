@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_flutter/Models/TrainBookingModel.dart';
-import 'package:login_flutter/ui/Pages/TrainPages/TrainBookingPage.dart';
+import 'package:login_flutter/ui/Pages/BookingPages/TrainBookingPage.dart';
 
 import '../../Components/CircularContainer.dart';
 import '../../Theme/LightColor.dart';

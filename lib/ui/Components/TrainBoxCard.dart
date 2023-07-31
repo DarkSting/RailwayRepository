@@ -16,7 +16,6 @@ class TrainBoxCard extends StatefulWidget {
   final int trainID;
   List<String> reservedSeatRef;
 
-
   List<Widget> _createSeatGrid(List<bool> seats,{required dynamic state}){
 
     Color checkButtonState(i,String seatcode){
@@ -33,9 +32,11 @@ class TrainBoxCard extends StatefulWidget {
 
     //creating the button
     Widget createButton(int i){
-      Color backgroundColor = Colors.white;
 
       String seatID = '${trainBox['classOfBox'].toString().trim()}:${trainBox['trainBoxNumber'].toString().trim()}:${trainID.toString()}:${i}';
+
+      Color backgroundColor = checkButtonState(i,seatID);
+
 
       return Container(
           margin:EdgeInsets.only(right: 10),
@@ -43,7 +44,7 @@ class TrainBoxCard extends StatefulWidget {
           ElevatedButton(
             child: Text("${i}"),
             style: ElevatedButton.styleFrom(
-              backgroundColor: checkButtonState(i,seatID),
+              backgroundColor: backgroundColor,
 
             ),
             onPressed: () {
@@ -59,6 +60,7 @@ class TrainBoxCard extends StatefulWidget {
             if(reservedSeatRef.contains(seatID)){
               print("im already there");
               print(reservedSeatRef);
+              reservedSeatRef.remove(seatID);
               state((){
                 backgroundColor =LightColor.lightGrey;
               });

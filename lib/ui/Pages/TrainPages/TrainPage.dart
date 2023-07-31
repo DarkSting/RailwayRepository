@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:flutter/material.dart";
 import "package:login_flutter/ui/Components/RoundBordersCard.dart";
 import "package:login_flutter/ui/Pages/TrainPages/TrainBoxPage.dart";
@@ -22,7 +24,8 @@ class _TrainPageState extends State<TrainPage> {
     final headers = {
       'Content-Type':'application/json'
     };
-    http.Response  response = await http.post(Uri.parse("http://192.168.8.114:8080/train/gettrains"),headers: headers);
+    http.Response  response = await http.post(Uri.parse("http://192.168.8.114:8080/train/gettrains"),
+        headers: headers);
 
     if(response.statusCode==200){
       return jsonDecode(response.body);
@@ -37,16 +40,13 @@ class _TrainPageState extends State<TrainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getTrains().then((value) => {
-      receivedTrains = value
-    }).catchError((error)=>{
-      receivedTrains = null
-    });
+
   }
 
   List<Widget> generateTrainList(Map<String,dynamic> map){
 
     List<Widget> currentList = [];
+
 
 
     if(map.isNotEmpty==true){
@@ -88,6 +88,22 @@ class _TrainPageState extends State<TrainPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(receivedTrains==null){
+
+
+      getTrains().then((value) => {
+
+      setState((){
+        receivedTrains = value;
+      })
+
+      }).catchError((error)=>{
+        receivedTrains = null
+      });
+    }
+
+
     return Container(
 
       child:Column(

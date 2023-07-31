@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:login_flutter/ui/Pages/DashboardPages/BookingPage.dart";
 import 'package:login_flutter/ui/Pages/TrainPages/TrainPage.dart';
 import "package:login_flutter/ui/Theme/LightColor.dart";
 import "package:login_flutter/ui/Components/Header.dart";
@@ -20,7 +21,7 @@ class _DashboardState extends State<Dashboard> {
 
   final List<String> _headers =[
     "Train",
-    "Booking",
+    "Bookings",
   ];
 
   final List<IconData> _icons =[
@@ -30,11 +31,8 @@ class _DashboardState extends State<Dashboard> {
 
   final List<Widget> _pages = [
     TrainPage(),
-    Container(
-      child: Center(
-        child:Text("hello akash",style: TextStyle(fontSize: 15,color: Colors.black)),
-      ),
-    )
+    BookingPage(),
+
   ];
 
   BottomNavigationBarItem _bottomIcons(IconData icon) {

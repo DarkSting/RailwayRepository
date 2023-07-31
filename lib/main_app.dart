@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:login_flutter/Models/TrainBookingModel.dart';
+import 'package:login_flutter/ui/Pages/DashboardPages/BookingPage.dart';
 import 'package:login_flutter/ui/Components/FileNotFoundError.dart';
 import 'package:login_flutter/ui/Components/TrainBoxCard.dart';
 import 'package:login_flutter/ui/Components/TrainBoxCardStyle2.dart';
 import 'package:login_flutter/ui/Pages/DashboardPages/DashBoard.dart';
 import 'package:login_flutter/ui/Pages/LoginAndSignupPages/signup.dart';
-import 'package:login_flutter/ui/Pages/TrainPages/TrainBookingPage.dart';
+import 'package:login_flutter/ui/Pages/BookingPages/TrainBookingPage.dart';
 import 'package:login_flutter/ui/Pages/TrainPages/TrainBoxPage.dart';
 //import 'package:login_flutter/ui/Components/TrainBoxCardStyle2.dart';
 
@@ -30,7 +31,12 @@ class MainApp extends StatelessWidget {
         )
       ),
 
-       home:Dashboard(),
+       home:
+           Scaffold(
+             body:Dashboard()
+           )
+
+
 
       //TrainBoxPage(trainID: 200),
       // SeatCard(buttonColor: LightColor.lightOrange,chipText1: "train 1",chipText2: "Book Train",context: "train card",

@@ -4,7 +4,7 @@ import 'package:login_flutter/ui/Components/FileNotFoundError.dart';
 import 'package:login_flutter/Models/TrainBoxModel.dart';
 import 'package:login_flutter/ui/Components/Spinners.dart';
 import 'package:login_flutter/ui/Components/TrainBoxCard.dart';
-import 'package:login_flutter/ui/Pages/TrainPages/TrainBookingPage.dart';
+import 'package:login_flutter/ui/Pages/BookingPages/TrainBookingPage.dart';
 import 'package:login_flutter/ui/Theme/LightColor.dart';
 import 'dart:async';
 
