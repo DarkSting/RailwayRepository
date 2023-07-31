@@ -351,8 +351,6 @@ const getAvailableSeats = async(req,res)=>{
  * DESC : updates the selected seat by the user 
  * ROUTE : train/bookseat
  */
-
-
 const bookSeatsWithArray = async(req,res)=>{
 
   const {array} = req.body;
@@ -529,6 +527,7 @@ const getTrainBox = async(ObjectId) =>{
 
 
 const getTrains = async (req, res) => {
+  console.log("controller hit");
   await trainModel
     .find({})
     .sort({ trainNumber: -1 })
@@ -571,7 +570,7 @@ const getTrain = async (req, res) => {
   
 
   res.status(200).json({
-    id: outTrain._id,
+    id: outTrain.trainNumber,
     name: outTrain.name,
     destination: outTrain.destination,
     startpoint: outTrain.startpoint,
@@ -579,6 +578,8 @@ const getTrain = async (req, res) => {
     trainBoxes: trainBoxesArray
   });
 };
+
+
 
 /*
 method: DELETE

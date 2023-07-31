@@ -11,6 +11,33 @@ const { bookSeat } = require('./TrainControllers');
  * DESC : creates a booking
  */
 
+const getBookings = async(req,res)=>{
+
+    const{userID} = req.body;
+
+    console.log("hello buddy")
+    if(!userID) return res.status(404).json({code:404,msg:"provide the user id"});
+
+    //change this code to obtain based on the user id instead ref no
+    const foundBookings = await BookingModel.find({refNo:userID});
+
+   if(foundBookings){
+
+    if(foundBookings[0]?.refNo){
+        return res.status(200).json(foundBookings);
+    }
+   
+    return res.status(404).json({code:404, msg:"no bookings available"});
+
+   }
+   else{
+    return res.status(404).json({code:404, msg:"no bookings available"});
+   }
+
+   
+
+}
+
 const createBooking = async(req,res)=>{
 
     
@@ -93,4 +120,6 @@ const createBooking = async(req,res)=>{
 }
 
 
-module.exports ={createBooking};
+module.exports ={
+    getBookings,
+    createBooking};

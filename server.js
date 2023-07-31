@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use("/train", require("./Routes/TrainRoutes"));
 app.use("/user", require("./Routes/UserRoutes"));
 app.use("/payment", require("./Routes/PaymentRoute"));
-//app.use("/api/book", require("./routes/book"));
+app.use("/booking", require("./Routes/BookingRoutes"));
 ///app.use("/api/auth", require("./routes/auth"));
 
 // mongodb

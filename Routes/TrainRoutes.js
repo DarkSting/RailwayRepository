@@ -15,6 +15,7 @@ const {
 const { isAdmin, isAuthenticated } = require("../middlewares/auth");
 
 router.post("/gettrain", getTrain);
+router.post("/gettrains", getTrains);
 router.post("/addtrain", addTrain);
 router.post("/putseat", putSeat);
 router.post("/gettrains", getTrains);
