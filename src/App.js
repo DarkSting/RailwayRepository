@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { createTheme, Stack, Box, ThemeProvider } from "@mui/material"
+import Dashboard from "./views/adminpage/AdminDashboard"
+import { Route,RouterProvider,Routes, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
+import Feed from "./components/Feed";
+import TripPage from "./views/adminpage/TripPage/TripPage";
 
-function App() {
+
+const router = createBrowserRouter(
+
+  createRoutesFromElements(
+
+    <Route>
+         
+         <Route path="/" element={ <Feed />} />
+          <Route path="trains" element={<TripPage />} />
+          <Route path="settrip" element={<Feed />} />
+          <Route path="addtrains" element={<Feed />} />
+     
+    
+    </Route>
+  
+
+        
+  )
+
+)
+
+
+const App = () => {
+  const [mode, setMode] = useState("light")
+  const toogleThemeMode = () => setMode(mode === "light" ? "dark" : "light")
+
+  const theme = createTheme({
+    palette: {
+      mode,
+    },
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ThemeProvider theme={theme}>
+
+      <Box bgcolor={"background.default"} color={"text.primary"}>
+        <Dashboard />
+      </Box>
+      <RouterProvider router={router}/>
+    </ThemeProvider>
+  )
 }
 
-export default App;
+export default App
