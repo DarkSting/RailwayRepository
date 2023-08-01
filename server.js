@@ -25,7 +25,8 @@ app.use("/train", require("./Routes/TrainRoutes"));
 app.use("/user", require("./Routes/UserRoutes"));
 app.use("/payment", require("./Routes/PaymentRoute"));
 app.use("/booking", require("./Routes/BookingRoutes"));
-///app.use("/api/auth", require("./routes/auth"));
+app.use("/trip", require("./Routes/TripRoutes"));
+app.use("/station", require("./Routes/StationRoutes"));
 
 // mongodb
 mongoose

@@ -10,14 +10,6 @@ const TrainSchema = new mongoose.Schema({
     type:Number,
     required:[true,'provide number']
   },
-  startpoint: {
-    type: String,
-    maxlength: 100,
-  },
-  destination:{
-    type: String,
-    maxlength: 100,
-  },
   trainBoxes:[{
     type:mongoose.Schema.Types.ObjectId,
     required:[true],

@@ -52,8 +52,6 @@ const addTrain = async(req,res)=>{
 
   const{
   name,
-  startpoint,
-  endpoint,
   trainNumber} = req.body;
 
   let r = null;
@@ -74,8 +72,6 @@ const addTrain = async(req,res)=>{
   const newTrain = new trainModel({
     
     name:name,
-    startpoint:startpoint,
-    destination:endpoint,
     trainBoxes:trainboxes,
     trainNumber:trainNumber
 
@@ -285,6 +281,7 @@ let refid =0;
  * ROUTE ; train/getseats
  * 
  */
+
 
 const getAvailableSeats = async(req,res)=>{
 
@@ -572,8 +569,6 @@ const getTrain = async (req, res) => {
   res.status(200).json({
     id: outTrain.trainNumber,
     name: outTrain.name,
-    destination: outTrain.destination,
-    startpoint: outTrain.startpoint,
     totalSeats:outTrain.totalSeats,
     trainBoxes: trainBoxesArray
   });

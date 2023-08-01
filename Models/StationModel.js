@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const stationEnum =["s1","c1","a1"];
 
 const stationSchema = new mongoose.Schema({
   stationNumber: {
@@ -11,9 +12,13 @@ const stationSchema = new mongoose.Schema({
     type:String,
     required:[true,'station name not provided']
   },
- location: {
+ longitude: {
     type: String,
-    default:""
+    default:"0"
+  },
+  latitude:{
+    type: String,
+    default:"0"
   },
   stationClass:{
     type:String,

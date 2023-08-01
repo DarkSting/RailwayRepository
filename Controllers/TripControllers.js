@@ -5,12 +5,12 @@ const {tripModel}= require("../Models/TripModel");
 
 const createTrip= async(req,res)=>{
 
-    const{trainID,routeID,departure,arrival} = req.body;
+    const{trainID,routeID,departure,arrival,bookings} = req.body;
 
-    if(!trainID && !routeID || !departure || !arrival){
+    if(!trainID && !routeID || !departure || !arrival || !bookings){
         return res.status(404).json({code:404,data:"provide all necessary details"})
     }
-
+ 
 
     const foundTrain = trainModel.findOne({_id:trainID});
     const foundroute = RouteModel.findOne({_id:routeID});
@@ -22,6 +22,7 @@ const createTrip= async(req,res)=>{
             departure:departure,
             arrival:arrival,
             route:foundroute._id,
+            bookings:bookings
 
         })
 

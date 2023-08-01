@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { stationSchema } = require('./StationModel');
-
+const { Date } = require('mongoose/lib/schema/index');
 
 const TripSchema = new mongoose.Schema({
 
@@ -10,13 +10,19 @@ const TripSchema = new mongoose.Schema({
         required:[true,'train reference is required']
     },
     departure:{
-        type:String,
+        type:Date,
         required:[true,'departure time not provided']
     },
     arrival:{
-        type:String,
+        type:Date,
         required:[true,'arrival time not provided']
     },
+    bookings:[{
+
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'bookings'
+        }]
+    ,
     createdAt:{
         type:Date,
         default:Date.now
