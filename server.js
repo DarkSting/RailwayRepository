@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const { openLiveServer } = require("./socket/iosocket");
 require("dotenv").config();
 
 
@@ -41,5 +42,8 @@ mongoose
 //port
 const PORT = process.env.PORT|| 5000;
 
+openLiveServer();
 //listen
 app.listen(PORT, () => console.log(`server started at ${process.env.PORT}`));
+
+

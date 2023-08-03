@@ -52,7 +52,7 @@ const addTrain = async(req,res)=>{
 
   const{
   name,
-  trainNumber} = req.body;
+  trainNumber,boxcount} = req.body;
 
   let r = null;
 
@@ -65,7 +65,7 @@ const addTrain = async(req,res)=>{
   }
 
 
-  let trainboxes =await gettingTrainBoxArray(5);
+  let trainboxes =await gettingTrainBoxArray(boxcount);
   
   
 
