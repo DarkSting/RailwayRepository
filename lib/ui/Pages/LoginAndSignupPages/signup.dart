@@ -320,7 +320,6 @@ class _SignupState extends State<Signup> {
                       borderSide: BorderSide(color: LightColor.darkBlue,width: 2)
                   )
 
-
                 ),
                 validator: (String? value){
                   if(value==null || value.isEmpty){
@@ -347,19 +346,14 @@ class _SignupState extends State<Signup> {
 
                           ),
                         ),
-                        onPressed: () async{
+                        onPressed: (){
 
-                            try{
 
-                              final response = await widget.sendRequest(_controllerUsername.text,
+
+                          widget.sendRequest(_controllerUsername.text,
                                   _controllerEmail.text, _controllerPassword.text,
-                                  _controllerPhone.text,_controllerFirstName.text, _controllerLastName.text);
-                              print(response['_id']);
-                            }
-                            catch(e){
-                              print(e);
-                            }
-
+                                  _controllerPhone.text,_controllerFirstName.text, _controllerLastName.text)
+                              .then((value) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 width: 200,
@@ -371,6 +365,25 @@ class _SignupState extends State<Signup> {
                                 content: Center( child:Text("Registered Successfully")),
                               ),
                             );
+
+                          }).catchError((error){
+                            print(error);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                width: 200,
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                content: Center( child:Text("Registeration failed")),
+                              ),
+                            );
+                          });
+
+
+
+
 
                           // Navigator.push(
                           //
@@ -388,7 +401,6 @@ class _SignupState extends State<Signup> {
                     children: [
                       const Text("Already have an account?"),
                       TextButton(
-
                         onPressed: () {
                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const Login()));
                         },

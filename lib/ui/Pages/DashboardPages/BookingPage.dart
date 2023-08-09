@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_flutter/Models/TrainBookedModel.dart';
 import 'package:http/http.dart' as http;
-import 'package:login_flutter/Models/TrainBookedModel.dart';
 import 'dart:convert';
-import 'package:login_flutter/Models/TrainBookingModel.dart';
 import 'package:login_flutter/ui/Components/BookingCard.dart';
 
 
@@ -18,6 +16,20 @@ class _BookingPageState extends State<BookingPage> {
 
 
   List<BookedModel> receivedBooking = [];
+
+  @override
+  initState(){
+    super.initState();
+    getBookings().then((value) {
+      setState(() {
+
+      });
+    })
+    .catchError((onError){
+
+  });
+
+  }
 
   Future<Map<String,dynamic>?> getBookings() async{
 
@@ -73,7 +85,7 @@ class _BookingPageState extends State<BookingPage> {
       currentList.add(BookingCard(totalPrice: current.totalPrice??0,bookedDate: current.bookedDate??"",
         bookedSeats: current.bookedSeats??[],isPaid: current.isPaid??false,
 
-      )
+      ),
 
       );
       print(current);
@@ -94,21 +106,16 @@ class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
 
+    if(receivedBooking.isNotEmpty==true){
+      List<Widget> bookinglist = getBookingList();
+      return currentWidget = Expanded(child:ListView.builder(
+            itemCount: bookinglist.length,
+          itemBuilder: (context,index) {
+            return bookinglist[index];
+          })
+    );
 
-    if(receivedBooking.isEmpty==true){
-      getBookings().then((value) => {
-        currentWidget = Column(
-          children: getBookingList(),
-        ),
-        setState(() {
-
-        })
-
-      }).catchError((onError)=>{
-
-      });
     }
-
     return currentWidget;
   }
 

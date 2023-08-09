@@ -61,6 +61,7 @@ class TrainBoxCard extends StatefulWidget {
               print("im already there");
               print(reservedSeatRef);
               reservedSeatRef.remove(seatID);
+
               state((){
                 backgroundColor =LightColor.lightGrey;
               });

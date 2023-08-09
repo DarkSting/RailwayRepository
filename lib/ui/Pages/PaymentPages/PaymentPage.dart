@@ -3,12 +3,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:login_flutter/Models/TrainBookingModel.dart';
+import 'package:login_flutter/ui/Components/TrainModel.dart';
 
 class PaymentFunction {
 
   Map<String, dynamic>? paymentIntent;
 
-  Future<void> makePayment(int amount) async {
+  Future<void> makePayment(int amount, TrainBooking bookingData) async {
 
     final url = Uri.parse('http://192.168.8.114:8080/payment/makePayment');
     final headers = {
@@ -44,7 +46,68 @@ class PaymentFunction {
               customerEphemeralKeySecret: paymentIntentData['ephemeralKey'],
             )
         );
-      await Stripe.instance.presentPaymentSheet();
+
+        //when the payment is successfull the booking controller will be invoked
+      await Stripe.instance.presentPaymentSheet().whenComplete(() async{
+
+        try{
+
+          //create booking
+          final urlconfirm = Uri.parse('http://192.168.8.114:8080/booking/makebook');
+          final headersconfirm = {
+            'Content-Type':'application/json'
+          };
+
+          final dataconfirm ={
+            'seatIdArray': bookingData.bookedSeats,
+            'bookedPersonId':'64c2bea893fbba7a0836ab3f',
+            'paid':true
+          };
+
+
+          final response = await http.post(
+            urlconfirm,
+            headers: headersconfirm,
+            body: jsonEncode(dataconfirm),
+          );
+
+
+          //mail sending
+          final emailUrl = Uri.parse('http://192.168.8.114:8080/payment/sendmail');
+
+          final mailBody = {
+            'user': '64c2bea893fbba7a0836ab3f'
+            ,'bookedSeatsArray' : bookingData.bookedSeats
+            ,'cost': bookingData.totalPrice
+            ,'paidDate': DateTime.now().toString()
+            ,'discounts': 5
+          };
+
+
+          final emailResponse = await http.post(
+            emailUrl,
+            headers: headersconfirm,
+            body: jsonEncode(mailBody),
+          );
+
+
+
+          if(emailResponse.statusCode==200){
+            print(jsonDecode(emailResponse.body));
+          }
+
+          if(response.statusCode==201){
+                print("train seat booked");
+          }
+          else{
+            throw Exception(jsonDecode(response.body));
+          }
+        }
+        catch(e){
+          print(e);
+        }
+
+      });
 
 
     } else {

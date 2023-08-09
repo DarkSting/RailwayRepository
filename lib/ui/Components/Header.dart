@@ -15,7 +15,7 @@ class Header extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     return ClipRRect(
       borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(50), bottomRight: Radius.circular(50)),
+          bottomLeft: Radius.circular(0), bottomRight: Radius.circular(0)),
       child: Container(
           height: 150,
           width: width,

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:login_flutter/ui/Pages/DashboardPages/DashBoard.dart';
 import 'package:login_flutter/ui/Theme/LightColor.dart';
-
-import '../../home.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Login extends StatefulWidget {
   const Login({
@@ -16,6 +18,55 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+
+  Future<Map<String,dynamic>> sendRequest(String userName,
+ String password
+      ) async{
+
+
+    final url = Uri.parse('http://192.168.8.114:8080/user/loginuser');
+    final headers = {
+      'Content-Type':'application/json'
+    };
+
+    final data ={
+      'userName':userName,
+      'password': password,
+
+    };
+
+    final client = http.Client();
+
+    final response = await client.post(
+      url,
+      headers: headers,
+      body: jsonEncode(data),
+    );
+
+
+    print("hello");
+
+    if (response.statusCode == 200) {
+      Map<String, String> cookies = response.headers['set-cookie']
+          !.split(';')
+          .map((cookie) => cookie.split('='))
+          .fold({}, (map, parts) {
+        map[parts[0]] = parts[1];
+        return map;
+      });
+      print(cookies);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('jwt', cookies['_id']??'');
+
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Request failed with status: ${response.statusCode}');
+    }
+
+  }
+
+
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   final FocusNode _focusNodePassword = FocusNode();
@@ -153,20 +204,30 @@ class _LoginState extends State<Login> {
 
                     ),
                     onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        _boxLogin.put("loginStatus", true);
-                        _boxLogin.put("userName", _controllerUsername.text);
+                      sendRequest(_controllerUsername.text, _controllerPassword.text).then((value) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Dashboard();
+                            },
+                          ),
+                        );
+                      }).catchError((error){
+                        print(error);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            width: 200,
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            content: Center( child:Text("login failed invalid user")),
+                          ),
+                        );
+                      });
 
-
-                      }
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return Dashboard();
-                          },
-                        ),
-                      );
                     },
                     child: const Text("Login"),
                   ),

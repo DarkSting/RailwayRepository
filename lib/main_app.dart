@@ -7,7 +7,10 @@ import 'package:login_flutter/ui/Components/TrainBoxCardStyle2.dart';
 import 'package:login_flutter/ui/Pages/DashboardPages/DashBoard.dart';
 import 'package:login_flutter/ui/Pages/LoginAndSignupPages/signup.dart';
 import 'package:login_flutter/ui/Pages/BookingPages/TrainBookingPage.dart';
+import 'package:login_flutter/ui/Pages/MapPages/MapPage.dart';
+import 'package:login_flutter/ui/Pages/MapPages/Socket.dart';
 import 'package:login_flutter/ui/Pages/TrainPages/TrainBoxPage.dart';
+import 'package:login_flutter/ui/Pages/TripPage/PendingTripsPage.dart';
 //import 'package:login_flutter/ui/Components/TrainBoxCardStyle2.dart';
 
 class MainApp extends StatelessWidget {
@@ -31,10 +34,8 @@ class MainApp extends StatelessWidget {
         )
       ),
 
-       home:
-           Scaffold(
-             body:Dashboard()
-           )
+       home: Signup(),
+
 
 
 

@@ -50,7 +50,7 @@ class _TrainPageState extends State<TrainPage> {
 
 
     if(map.isNotEmpty==true){
-      for(int i=0;i<map.length;i++){
+      for(int i=0;i<map['trains'].length;i++){
 
         Function() buttonOnPressed = (){
           Navigator.push(context, MaterialPageRoute(builder: (context)=>TrainBoxPage(trainID:map['trains'][i]['trainNumber'] as int )));
@@ -82,8 +82,6 @@ class _TrainPageState extends State<TrainPage> {
       );
       return currentList;
     }
-
-
   }
 
   @override
@@ -112,14 +110,14 @@ class _TrainPageState extends State<TrainPage> {
           TopicBar("Available Trains", LightColor.lightOrange, LightColor.background, 15,30),
           SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Container(
+
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: generateTrainList(receivedTrains==null?{}:receivedTrains as Map<String,dynamic>)
           ),
         ),
-      )
+
         ],
       ),
     );

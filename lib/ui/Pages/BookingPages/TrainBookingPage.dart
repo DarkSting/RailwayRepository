@@ -187,7 +187,7 @@ class _TrainBookingPageState extends State<TrainBookingPage> {
 
                             try{
                               print(widget.trainData.passengers);
-                              await function.makePayment(widget.trainData.totalPrice);
+                              await function.makePayment(widget.trainData.totalPrice,widget.trainData);
                               Navigator.pushReplacement(
                                  context,
                                  MaterialPageRoute(builder: (context) =>const Dashboard()),
