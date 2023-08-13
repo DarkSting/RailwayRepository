@@ -1,4 +1,6 @@
 const {UserModel} = require("../Models/UserModel");
+const cookie = require('cookie');
+const {authenticateUser, createToken} = require('../Middlewares/authentication');
 
 /*
 method : POST
@@ -11,13 +13,15 @@ const createUser = async (req, res) => {
     email,
     password,
     phone,
-    nic,
     firstName,
     lastName,
 
 
 
 } = req.body
+
+console.log(req.body);
+
 
 try{
 
@@ -47,18 +51,20 @@ route: /api/user/:id
 description: get's a single user given the id
 */
 const getUser = async (req, res) => {
-  const { id,userName } = req.body;
+  const { userID } = req.body;
+
+  console.log(userID);
 
   // validation
-  if(id!==undefined && userName!==undefined){
+  if(!userID){
     return res.status(500).json({code:500,msg:"id and username not defined"})
   }
 
   let foundUser = null
 
-  if(id){
+  if(userID){
     foundUser = await UserModel.findOne({
-      _id: id});
+      _id: userID.trim()});
   }
   else{
     
@@ -76,6 +82,7 @@ const getUser = async (req, res) => {
     email:foundUser.email,
     phone:foundUser.phone,
     nic:foundUser.nic,
+    userName:foundUser.userName,
     DOB:foundUser.DOB
   });
 
@@ -171,6 +178,30 @@ const returnCurrentUser = async (req, res) => {
   });
 };
 
+const loginUser = async(req,res)=>{
+
+  const{userName,password} = req.body;
+
+  try{
+    const foundUser = await UserModel.login(userName,password);
+
+    console.log(foundUser._id);
+   if(!foundUser){
+    return res.status(404).json({error:"user is not valid"});
+   }
+
+   res.setHeader('set-cookie', [
+    cookie.serialize('_id', foundUser._id),
+  ]);
+    return res.status(200).json(foundUser);
+
+
+  }catch(e){
+    return res.status(500).json({msg:e.message});
+  }
+  
+}
+
 
 
 // exporting the modules
@@ -180,4 +211,5 @@ module.exports = {
   getAllUsers,
   deleteUser,
   returnCurrentUser,
+  loginUser
 };

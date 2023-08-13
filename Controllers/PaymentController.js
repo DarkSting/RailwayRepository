@@ -11,6 +11,8 @@ const stripePayment = require('stripe')(process.env.SECRET_KEY);
  */
 const createIntentent = async(req,res)=>{
 
+  
+  console.log("payment invoked")
     const{amount}=req.body;
 
     console.log(amount)

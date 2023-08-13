@@ -12,7 +12,7 @@ const {
   unBookSeatWithArray,
   createPrice
 } = require("../Controllers/TrainControllers");
-const { isAdmin, isAuthenticated } = require("../middlewares/auth");
+const { isAdmin, isAuthenticated } = require("../Middlewares/authentication");
 
 router.post("/gettrain", getTrain);
 router.post("/gettrains", getTrains);

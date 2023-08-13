@@ -2,7 +2,9 @@ const { Date } = require('mongoose/lib/schema/index');
 const {BookingModel} = require('../Models/BookingModel');
 const { trainModel } = require('../Models/TrainModel');
 const { TrainPriceModel } = require('../Models/TrainPricesModel');
+const{tripModel}= require('../Models/TripModel')
 const { bookSeat } = require('./TrainControllers');
+const { StationModel } = require('../Models/StationModel');
 
 /**.
  * 
@@ -19,7 +21,7 @@ const getBookings = async(req,res)=>{
     if(!userID) return res.status(404).json({code:404,msg:"provide the user id"});
 
     //change this code to obtain based on the user id instead ref no
-    const foundBookings = await BookingModel.find({refNo:userID});
+    const foundBookings = await BookingModel.find({userID:userID});
 
    if(foundBookings){
 
@@ -34,15 +36,42 @@ const getBookings = async(req,res)=>{
     return res.status(404).json({code:404, msg:"no bookings available"});
    }
 
-   
+}
 
+const calculateDistance = (lat1,lon1, lat2,lon2)=>{
+
+    const earthRadius = 6371; // Earth's radius in kilometers
+
+    const dLat = degreesToRadians(lat2 - lat1);
+    const dLon = degreesToRadians(lon2 - lon1);
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(degreesToRadians(lat1)) * Math.cos(degreesToRadians(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadius * c;
+
+    console.log(distance);
+    return distance.toFixed(3);
+
+}
+
+function degreesToRadians(degrees) {
+    return degrees * (Math.PI / 180);
 }
 
 const createBooking = async(req,res)=>{
 
-    
+    const{seatIdArray,userID,paid,station,tripId,destinationID} = req.body;
 
-    const{seatIdArray,bookedPersonId,paid} = req.body;
+    console.log(req.body);
+
+    if(!seatIdArray || !userID || !station || !destinationID){
+
+        return res.status(404).json({msg:'provide necessary details'});
+    }
     
     const IDs = seatIdArray[0].split(':');
 
@@ -52,29 +81,48 @@ const createBooking = async(req,res)=>{
 
     let train = null;
     let trainPrices = null;
+    let foundDestination=null;
+    let beginStation = null;
 
     try{
 
+    foundDestination = await StationModel.findOne({stationNumber:destinationID});
+    beginStation = await StationModel.findOne({stationNumber:station});
     train = await trainModel.findOne({trainNumber:trainId})
     trainPrices = await TrainPriceModel.findOne({trainRef:train._id});
 
+    
     }catch(e){
         return res.status(500).json("server error")
     }
    
+    if(!trainPrices){
+        return res.status(409).json("Prices are not defined for the current train");
+    }
 
-    console.log(trainPrices);
+    if(!foundDestination || !beginStation){
+        return res.status(404).json("provide correct station ids");
+    }
+
+
+    const distance = calculateDistance(foundDestination.latitude,foundDestination.longitude,beginStation.latitude,beginStation.longitude);
+
+    console.log(foundDestination);
+    console.log(beginStation);
+    console.log(distance);
 
     for(let seatId of seatIdArray){
 
+    
         const result = await bookSeat(seatId);
         
         if(result?.data){
+
             if(result.data){
                 
                 const splits = seatId.split(":");
-                let totalprice = trainPrices[splits[0]]
-                results.push([200,totalprice]);
+                let totalprice = trainPrices[`${splits[0]}`]
+                results.push([200,parseInt(totalprice*distance)]);
                 
             }
             else{
@@ -100,12 +148,13 @@ const createBooking = async(req,res)=>{
             refNo:trainId,
             bookedSeats:seatIdArray,
             totalPrice:totalCost,
+            userID:userID,
             isPaid : paid
         })
 
         response.save();
 
-        return res.status(201).json("model created")
+        return res.status(201).json({totalPrice:totalCost})
         
     }
     catch(e){
@@ -122,4 +171,5 @@ const createBooking = async(req,res)=>{
 
 module.exports ={
     getBookings,
+    calculateDistance,
     createBooking};

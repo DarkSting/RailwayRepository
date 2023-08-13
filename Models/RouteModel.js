@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const routeSchema = new mongoose.Schema({
   name: {
     type: String,
-    trim: true,
-    unique:[true,'this name already exists']
+
   },
   routeNumber: {
     type: String,
@@ -12,6 +11,10 @@ const routeSchema = new mongoose.Schema({
     unique: true,
     required:[true,'route number not set up']
   },
+  Stops:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'stations'
+}],
   startPoint:{
   type:String,
   required:[true,'start point not set up']

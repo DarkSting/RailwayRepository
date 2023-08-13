@@ -46,6 +46,7 @@ const createStation = async (req, res) => {
 
   const getStations = async(req,res)=>{
 
+    console.log("get station controller is working")
 
     const foundStation = await StationModel.find({})
     
@@ -60,18 +61,43 @@ const createStation = async (req, res) => {
 
 
 
-  const addbookingsToStation = async(req,res)=>{
+ 
 
-        const{bookings} = req.body;
+  const getStationsByID = async(req,res)=>{
 
+    const{stationIDArray} = req.body;
 
+    let stationArray = [];
 
-  }
+    if(!stationIDArray){
+        return res.status(404).json({code:404,msg:"object not found"});
+    }
+
+    const foundStation = await StationModel.find({});
+
+    for(let currentStation of foundStation){
+
+        
+        if(stationIDArray.includes(currentStation._id.toString())){
+            stationArray.push(currentStation);
+        }
+
+    }
+    
+        if(stationArray.length>0){
+            return res.status(200).json({foundStation:stationArray});
+        }
+        else{
+            return res.status(404).json({code:404,msg:"Found no station"});
+        }
+
+}
 
 
   module.exports = {
 
     createStation,
     getStations,
-    getStation
+    getStation,
+    getStationsByID
   }

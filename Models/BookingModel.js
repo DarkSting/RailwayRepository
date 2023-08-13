@@ -16,15 +16,14 @@ const bookingSchema = new mongoose.Schema({
     type:Date,
     default:Date.now
   },
+  userID:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'users'
+  },
   bookedSeats:{
     type:[String],
     required:[true ,'seats not provided']
   },
-  bookedPerson:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:'users',
-    //required:[true ,'booked person not provided']
-  }
 
 });
 

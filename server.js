@@ -5,10 +5,16 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const { openLiveServer } = require("./socket/iosocket");
 require("dotenv").config();
+const { Server, Socket } = require('socket.io');
 
 
 // app config
 const app = express();
+const  http = require('http');
+const httpServer = http.createServer(app)
+const io = new Server(httpServer,{
+  cors:{origin:"*"}
+});
 
 //middlewares
 app.use(
@@ -28,6 +34,9 @@ app.use("/payment", require("./Routes/PaymentRoute"));
 app.use("/booking", require("./Routes/BookingRoutes"));
 app.use("/trip", require("./Routes/TripRoutes"));
 app.use("/station", require("./Routes/StationRoutes"));
+app.use("/route", require("./Routes/TrainPathRoutes"));
+
+
 
 // mongodb
 mongoose
@@ -42,8 +51,8 @@ mongoose
 //port
 const PORT = process.env.PORT|| 5000;
 
-openLiveServer();
+openLiveServer(io);
 //listen
-app.listen(PORT, () => console.log(`server started at ${process.env.PORT}`));
+httpServer.listen(PORT, () => console.log(`server started at ${process.env.PORT}`));
 
 

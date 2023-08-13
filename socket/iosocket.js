@@ -1,8 +1,6 @@
-const { Server, Socket } = require('socket.io');
 
-const io = new Server({cors:'http://localhost:3000'});
 
-const openLiveServer=()=>{
+const openLiveServer=(io)=>{
 
     io.on("connection",(socket)=>{
 
@@ -10,7 +8,7 @@ const openLiveServer=()=>{
 
         socket.on("invoke",(userMsg)=>{
             console.log(userMsg);
-            socket.emit("getdata","hell yeah")
+            socket.emit("getdata",userMsg)
         }  
         )
 
@@ -18,9 +16,7 @@ const openLiveServer=()=>{
     
     })
 
-    
-    
-    io.listen(3001);
+
 }
 
 

@@ -47,7 +47,7 @@ userSchema.statics.login = async function(username,password){
 
   const user = await this.findOne({userName:username});
   if(user){
-    const auth = await bcrypt.compare(password,user.password);
+    const auth = await bcrypt.compare(password,user.encry_password);
     
     if(auth){
       return user;
@@ -64,7 +64,7 @@ userSchema.pre('save', async function () {
   if(this.encry_password!==""){
     const salt = await bcrypt.genSalt();
     this.encry_password= await bcrypt.hash(this.encry_password, salt);
-    console.log(this.password);
+    console.log(this.encry_password);
   }
     
   });

@@ -5,13 +5,14 @@ const {
   getAllUsers,
   deleteUser,
   returnCurrentUser,
+  loginUser,
 } = require("../Controllers/UserControllers");
-const { isAdmin, isAuthenticated } = require("../middlewares/auth");
+const { isAdmin, isAuthenticated } = require("../Middlewares/authentication");
 router.post("/adduser", createUser);
-router.get("/getuser", getUser);
+router.post("/getuser", getUser);
 router.get("/getallusers", getAllUsers);
 router.delete("/deleteuser", deleteUser);
-router.get("/return/current", isAuthenticated, returnCurrentUser);
+router.post("/loginuser", loginUser);
 //hello there im akash
 
 module.exports = router;
