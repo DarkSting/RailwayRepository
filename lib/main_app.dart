@@ -34,7 +34,7 @@ class MainApp extends StatelessWidget {
         )
       ),
 
-       home: Signup(),
+       home: Dashboard(),
 
 
 

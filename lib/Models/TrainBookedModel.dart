@@ -1,3 +1,5 @@
+import 'dart:math' as Math;
+
 class BookedModel {
   bool? isPaid;
   List<String>? bookedSeats;
@@ -9,13 +11,14 @@ class BookedModel {
 
   BookedModel.fromJson(Map<String, dynamic> json) {
     isPaid = json['isPaid'];
+
     if (json['bookedSeats'] != null) {
       bookedSeats = <String>[];
       json['bookedSeats'].forEach((v) {
         bookedSeats!.add(v);
       });
     }
-    totalPrice = json['totalPrice'];
+    totalPrice = (json['totalPrice']/100).toInt()*2;
     bookedDate = json['bookedDate'];
   }
 

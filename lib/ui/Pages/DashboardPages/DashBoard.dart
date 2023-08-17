@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:login_flutter/ui/Pages/DashboardPages/BookingPage.dart";
 import "package:login_flutter/ui/Pages/MapPages/MapPage.dart";
 import "package:login_flutter/ui/Pages/ProfilePage/ProfilePage.dart";
+import "package:login_flutter/ui/Pages/SchedulePages/SchedulePage.dart";
 import 'package:login_flutter/ui/Pages/TrainPages/TrainPage.dart';
 import "package:login_flutter/ui/Pages/TripPage/PendingTripsPage.dart";
 import "package:login_flutter/ui/Theme/LightColor.dart";
@@ -26,7 +27,7 @@ class _DashboardState extends State<Dashboard> {
     "Train",
     "Bookings",
     "Schedule",
-    "profile"
+    "Profile"
   ];
 
   final List<IconData> _icons =[
@@ -39,7 +40,7 @@ class _DashboardState extends State<Dashboard> {
   final List<Widget> _pages = [
     PendingTripsPage(),
     BookingPage(),
-    BookingPage(),
+    SchedulePage(),
     ProfilePage(),
 
 
@@ -71,7 +72,7 @@ class _DashboardState extends State<Dashboard> {
           showUnselectedLabels: false,
           selectedItemColor: LightColor.black,
           currentIndex: _currentIndex,
-          unselectedItemColor: LightColor.lightGrey,
+          unselectedItemColor: LightColor.grey,
           type:BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
           items: [

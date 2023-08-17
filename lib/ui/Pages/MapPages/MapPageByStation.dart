@@ -2,30 +2,36 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hive/hive.dart';
 import 'package:login_flutter/Models/StationModel.dart';
-//import 'package:login_flutter/Models/SocketIO.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import '../../../Models/ScheduleModel.dart';
 
-class MapPage extends StatefulWidget {
+class MapPageByStation extends StatefulWidget {
 
-  List<String> stations;
+  List<Stations> stations;
   String origin;
   String destination;
+  int? trainNumber;
 
-   MapPage({ this.origin="",this.destination="",required this.stations,super.key});
+
+  MapPageByStation({ this.trainNumber=0,this.origin="",this.destination="",required this.stations,super.key});
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  State<MapPageByStation> createState() => _MapPageByStationState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _MapPageByStationState extends State<MapPageByStation> {
 
   //tracked inserted trainstations
-  List<Station> stationList =[];
+  List<Stations> stationList =[];
   Set<Polyline> _polyLines = Set<Polyline>();
+  Marker trainMarker=Marker(markerId: MarkerId("train"));
+  late IO.Socket socket;
+
+
 
   int polyLineID = 1;
 
@@ -41,9 +47,9 @@ class _MapPageState extends State<MapPage> {
     };
 
     final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(stationBody)
+        url,
+        headers: headers,
+        body: jsonEncode(stationBody)
     );
     print(stations);
 
@@ -54,7 +60,7 @@ class _MapPageState extends State<MapPage> {
 
       List<Station> _stationList =[];
       for(Map<String,dynamic> current in list){
-            _stationList.add(Station.fromJson(current));
+        _stationList.add(Station.fromJson(current));
       }
 
       return _stationList;
@@ -73,7 +79,6 @@ class _MapPageState extends State<MapPage> {
   //goople api controller
   final Completer<GoogleMapController> _controller =
   Completer<GoogleMapController>();
-
   //socket
   //TrainLiveSocket? socket;
 
@@ -84,14 +89,58 @@ class _MapPageState extends State<MapPage> {
     findStations(widget.stations,origin: widget.origin,destination: widget.destination );
     print("hello");
     print(stationList);
+    initiateSocket().then((value){
+      print('socket initialized');
+    }).catchError((onError){
+      print(onError.toString());
+    });
+    createCustomMarkerIcon().then((value) {
+
+    }).catchError((onError){
+
+    });
     //socket?.connectToSocket();
   }
 
-  void findStations(List<String> stations,{String origin="",String destination=""}){
-    getTrainStations(stations).then((value) {
-      print(value.length);
-      stationList = value;
-      markers = createMarkers();
+
+
+  //creating the socket io
+  Future<void> initiateSocket () async{
+    try{
+      socket = IO.io("http://192.168.8.114:8080",<String,dynamic>{
+        'transports':['websocket'],
+        'autoConnect':true
+      });
+
+      socket.connect();
+      socket.emit("joinRoom",{'trainNumber':widget.trainNumber,'userID':socket.id});
+      socket.on("position-changed", (data) {
+          markers = createMarkers(data);
+          _goToThePosition(trainMarker.position);
+          setState(() {
+
+          });
+
+      });
+      socket.onConnect((data){
+        print('Connect /////////////////////////:${socket.id}');
+      });
+      socket.onConnectError((data){
+        print(data);
+      });
+      socket.onDisconnect((data) {
+        print('user disconnected');
+      });
+    }catch(e){
+      print(e.toString());
+    }
+
+  }
+
+  void findStations(List<Stations> stations,{String origin="",String destination=""}){
+
+      stationList = stations;
+      markers = createMarkers(null);
 
       if(origin!="" && destination!=""){
         getDirections(origin, destination);
@@ -101,9 +150,17 @@ class _MapPageState extends State<MapPage> {
 
       });
 
-    }).catchError((onError){
-      print("hello"+onError.toString());
-    });
+
+  }
+
+  BitmapDescriptor? customMarkerIcon;
+
+  Future<void> createCustomMarkerIcon() async {
+    customMarkerIcon = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(size: Size(5, 5)),
+
+      'assets/trainicon.png',
+    );
   }
 
   //current marker
@@ -117,21 +174,36 @@ class _MapPageState extends State<MapPage> {
       infoWindow: InfoWindow(title:'current position')
   );
 
+
   //create markers to track the directions
-  Set<Marker> createMarkers(){
+  Set<Marker> createMarkers(Map<String,dynamic>? data){
 
     //18.5 meters
     Set<Marker> markers = Set<Marker>();
+    double? lat = data==null?null:data!['latitude'];
+    double? long = data==null?null:data!['longitude'];
+
 
     if(stationList.isNotEmpty==true){
       for(int i=0;i<stationList.length;i++){
 
-        Station currentStation = stationList[i];
+        Stations currentStation = stationList[i];
 
-        LatLng ctLocation = LatLng(currentStation!.latitude!,currentStation!.longitude!);
+        if(i==0){
+
+          trainMarker = Marker(markerId: MarkerId("train"),
+          position: LatLng(double.parse(lat==null?currentStation.latitude!:lat.toString()),
+              double.parse(long==null?currentStation.longitude!:long.toString())),
+          icon: BitmapDescriptor.defaultMarkerWithHue(240),
+              infoWindow: InfoWindow(title: "Train")
+          );
+          markers.add(trainMarker);
+        }
+
+        LatLng ctLocation = LatLng(double.parse(currentStation!.latitude!),double.parse(currentStation!.longitude!));
         Marker currentMarker = Marker(markerId: MarkerId('${currentStation.stationName} marker'),
             position: ctLocation,
-            infoWindow: InfoWindow(title: "${currentStation.stationName} marker")
+            infoWindow: InfoWindow(title: "${currentStation.stationName} station")
         );
         markers.add(currentMarker);
 
@@ -149,8 +221,8 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          Stack(
+        body:
+        Stack(
             children: [
               GoogleMap(
                 mapType: MapType.normal,
@@ -161,26 +233,27 @@ class _MapPageState extends State<MapPage> {
                 },
                 markers:markers ,
               ),
-            Positioned(
-            bottom: 16.0,
-            right: 80.0,
-            child: ElevatedButton(
-              onPressed: () {
+              Positioned(
+                bottom: 16.0,
+                right: 80.0,
+                child: ElevatedButton(
+                  onPressed: () {
 
-                  _goToThePosition(markers.elementAt(currentIndex).position);
-                  currentIndex++;
-                  if(markers.length<=currentIndex){
-                    currentIndex=0;
-                  }
 
-                // Button click handler
-              },
-              child: Text('Move To Next Marker'),
-            ),
-          ),
-    ]
+                    _goToThePosition(markers.elementAt(currentIndex).position);
+                    currentIndex++;
+                    if(markers.length<=currentIndex){
+                      currentIndex=0;
+                    }
 
-     )
+                    // Button click handler
+                  },
+                  child: Text('Move To Next Marker'),
+                ),
+              ),
+            ]
+
+        )
     );
   }
 
@@ -205,7 +278,7 @@ class _MapPageState extends State<MapPage> {
       'polyline_decoded': PolylinePoints().decodePolyline(json['routes'][0]['overview_polyline']['points']),
     };
 
-  return results;
+    return results;
 
   }
 
@@ -224,7 +297,7 @@ class _MapPageState extends State<MapPage> {
           ).toList(),
         ));
 
-   // Polyline
+    // Polyline
   }
 
   //animate the camera
@@ -235,7 +308,7 @@ class _MapPageState extends State<MapPage> {
         target: newPosition,
         zoom: 18.4746,
         tilt: 80.440717697143555,
-      bearing: 1.0
+        bearing: 1.0
     )));
 
     setState(() {
@@ -248,8 +321,8 @@ class _MapPageState extends State<MapPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    Navigator.pop(context);
-    //socket?.disConnect();
+    socket?.disconnect();
+    socket.dispose();
 
   }
 }

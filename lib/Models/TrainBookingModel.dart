@@ -11,9 +11,10 @@ class TrainBooking {
   int seatPrice ;
   String seatType;
   Widget? currentWidget;
+  String destionationStation;
 
   TrainBooking({this.bookedSeats=const[],this.passengers=0,this.trainNumber=0,
-    this.userID="",this.seatPrice=0,this.seatType="",this.currentWidget});
+    this.userID="",this.seatPrice=0,this.seatType="",this.currentWidget,required this.destionationStation});
 
 
 

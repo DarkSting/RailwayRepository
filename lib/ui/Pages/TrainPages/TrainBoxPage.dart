@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:login_flutter/Models/TrainBookingModel.dart';
 import 'package:login_flutter/ui/Components/FileNotFoundError.dart';
@@ -7,6 +9,8 @@ import 'package:login_flutter/ui/Components/TrainBoxCard.dart';
 import 'package:login_flutter/ui/Pages/BookingPages/TrainBookingPage.dart';
 import 'package:login_flutter/ui/Theme/LightColor.dart';
 import 'dart:async';
+import 'package:login_flutter/ui/Components/DialogBox.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 //train box page that displays train boxes details
@@ -15,14 +19,58 @@ class TrainBoxPage extends StatefulWidget {
   //train details
   final int trainID;
   final String destination;
+  final List<String> stations;
 
-  const TrainBoxPage({required this.trainID,this.destination="",super.key});
+  const TrainBoxPage({required this.trainID, required this.stations,this.destination="",super.key});
 
   @override
   State<TrainBoxPage> createState() => _TrainBoxPageState();
 }
 
 class _TrainBoxPageState extends State<TrainBoxPage> {
+
+  Future<String> getStoredCookies() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt') ?? '';
+
+  }
+
+  Future<int> makeBook(String destination,String source) async{
+
+    String storedCookies = await getStoredCookies();
+    //create booking
+    final urlconfirm = Uri.parse('http://192.168.8.114:8080/booking/makebook');
+    final headersconfirm = {
+      'Content-Type':'application/json'
+    };
+
+    final dataconfirm ={
+      'seatIdArray': reservedSeats,
+      'userID':storedCookies,
+      'paid':true,
+      'destinationID': destination.trim(),
+      'station' : source.trim()
+
+    };
+
+
+    final response = await http.post(
+      urlconfirm,
+      headers: headersconfirm,
+      body: jsonEncode(dataconfirm),
+    );
+
+    if(response.statusCode==201){
+
+      return jsonDecode(response.body)['totalPrice'] as int;
+    }
+    else{
+      return 0;
+    }
+
+
+  }
 
 
   //flags
@@ -39,6 +87,7 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
     _itemExtent = 270.0;
     super.initState();
     _getData();
+    selectedValue = dropdownOptions.length>0?dropdownOptions.elementAt(0):'None';
 
   }
 
@@ -75,6 +124,11 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
 
   List<Color> colors = [LightColor.lightOrange,LightColor.darkgrey,LightColor.darkBlue];
 
+  // Default selected value
+  List<String> dropdownOptions = [];
+  String selectedValue = 'None';
+
+
   @override
   Widget build(BuildContext context){
 
@@ -98,10 +152,11 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+
                   Container(
                     height: 60,
                     margin: EdgeInsets.only(right: 10),
-                    child: ElevatedButton(onPressed: (){
+                    child: ElevatedButton(onPressed: () async{
                       if(reservedSeats.isEmpty==true){
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -117,16 +172,35 @@ class _TrainBoxPageState extends State<TrainBoxPage> {
                         );
                       }
                       else{
-                          Navigator.push(context,MaterialPageRoute(builder:
-                              (context)=>TrainBookingPage(
-                                  trainData: TrainBooking(
+
+                        List<String> destination = await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                          return  TextInputDialog(stations: widget.stations,);
+                        })??[];
+
+                        if(destination.isNotEmpty){
+                          print("entered text is ${destination}");
+                          makeBook(destination.elementAt(0),"20").then((value){
+
+                            print(value);
+                            Navigator.push(context,MaterialPageRoute(builder:
+                                (context)=>TrainBookingPage(
+                                trainData: TrainBooking(
+                                    destionationStation: destination.elementAt(1),
                                     trainNumber:widget.trainID,
                                     bookedSeats: reservedSeats,
-                                    seatPrice: 200
-                                  )
-                              )
-                          )
-                          );
+                                    seatPrice:(value.toInt()/100).toInt()
+                                )
+                            )
+                            )
+                            );
+                          }).catchError((onError){
+                            print(onError);
+                          });
+
+                        }
+
                       }
 
 

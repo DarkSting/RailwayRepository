@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:login_flutter/Models/TripModel.dart';
 import 'package:login_flutter/ui/Components/TripCard.dart';
 import 'package:login_flutter/ui/Pages/MapPages/MapPage.dart';
+import '../../Components/Spinners.dart';
 import '../TrainPages/TrainBoxPage.dart';
 
 
@@ -20,19 +21,43 @@ class _PendingTripsPageState extends State<PendingTripsPage> {
 
   List<dynamic>? tripList;
 
+  bool isLoading=true;
+
+
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getTrips().then((value) {
-        setState(() {
+      isLoading = false;
+
           tripList =  value!['trips'];
+          for(int i=0;i<tripList!.length!;i++){
+            trips.add(TripModel.fromJson(tripList![i]));
+          }
+          for(int i=0;i<trips!.length!;i++){
+
+            if(i==trips.length-1){
+              trips[i].getRouteData().then((value) {
+
+                setState(() {
+
+                });
+              });
+
+            }
+            else{
+              trips[i].getRouteData();
+            }
+          }
+
           print(tripList);
-        });
+
 
     }).catchError((error){
-
+      isLoading = false;
       print(error);
     });
 
@@ -61,21 +86,14 @@ class _PendingTripsPageState extends State<PendingTripsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child:  ListView.builder(
+
+
+    if(!isLoading && tripList!.isNotEmpty){
+      return Expanded(child:  ListView.builder(
         itemCount: tripList==null?0:tripList!.length,
         itemBuilder: (context, index) {
-          trips.add(TripModel.fromJson(tripList![index]));
           TripModel current = trips[index];
 
-          if(current.routeData==null){
-            current.getRouteData().then((value) {
-                  setState(() {
-
-                  });
-            }).catchError((err){
-
-            });
-          }
 
 
           return  TripCard(heading: current.routeData==null?"Unknown Trip Route":
@@ -83,9 +101,11 @@ class _PendingTripsPageState extends State<PendingTripsPage> {
             subheading: current.route!, arrival: current.arrival!, departure: current.departure!,
             onPressedBook: (){
 
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>TrainBoxPage(trainID:int.parse(current.train!))));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>TrainBoxPage(trainID:int.parse(current.train!),
+                stations: current!.routeData!.stops!,
+              )));
 
-              },
+            },
             onPressedMap: (){
               Navigator.push(context, MaterialPageRoute(builder: (context)=> MapPage(stations: current.routeData!.stops!)));
             },
@@ -93,7 +113,19 @@ class _PendingTripsPageState extends State<PendingTripsPage> {
 
         },
       )
-    );
+      );
+    }
+    else if(!isLoading && tripList!.isEmpty){
+      return Container(
+        child: Center(
+          child: Text('No available bookings',style: Theme.of(context).textTheme.bodyMedium,),
+        ),
+      );
+    }
+    else{
+      return Expanded(child: Spinner());
+    }
+
 
   }
 }

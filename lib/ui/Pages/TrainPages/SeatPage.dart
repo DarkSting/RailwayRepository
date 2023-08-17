@@ -89,7 +89,7 @@ class SeatCard extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return  TrainBookingPage(trainData: TrainBooking(seatPrice: 200,trainNumber: 200,passengers: 6,seatType: "A1"));
+                      return  Text('hello');
                     },
                   ),
                 );

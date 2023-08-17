@@ -53,7 +53,7 @@ class _TrainPageState extends State<TrainPage> {
       for(int i=0;i<map['trains'].length;i++){
 
         Function() buttonOnPressed = (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>TrainBoxPage(trainID:map['trains'][i]['trainNumber'] as int )));
+          //Navigator.push(context, MaterialPageRoute(builder: (context)=>TrainBoxPage(trainID:map['trains'][i]['trainNumber'] as int )));
         };
         currentList.add(
             RoundBordersCard(buttonColor: LightColor.lightOrange,TrainName:(map['trains'][i]['name'].toString()),

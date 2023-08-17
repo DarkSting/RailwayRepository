@@ -5,12 +5,22 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:login_flutter/Models/TrainBookingModel.dart';
 import 'package:login_flutter/ui/Components/TrainModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentFunction {
 
   Map<String, dynamic>? paymentIntent;
 
+  Future<String> getStoredCookies() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt') ?? '';
+
+  }
+
   Future<void> makePayment(int amount, TrainBooking bookingData) async {
+
+    String storedCookies = await getStoredCookies();
 
     final url = Uri.parse('http://192.168.8.114:8080/payment/makePayment');
     final headers = {
@@ -52,25 +62,6 @@ class PaymentFunction {
 
         try{
 
-          //create booking
-          final urlconfirm = Uri.parse('http://192.168.8.114:8080/booking/makebook');
-          final headersconfirm = {
-            'Content-Type':'application/json'
-          };
-
-          final dataconfirm ={
-            'seatIdArray': bookingData.bookedSeats,
-            'bookedPersonId':'64c2bea893fbba7a0836ab3f',
-            'paid':true
-          };
-
-
-          final response = await http.post(
-            urlconfirm,
-            headers: headersconfirm,
-            body: jsonEncode(dataconfirm),
-          );
-
 
           //mail sending
           final emailUrl = Uri.parse('http://192.168.8.114:8080/payment/sendmail');
@@ -86,7 +77,7 @@ class PaymentFunction {
 
           final emailResponse = await http.post(
             emailUrl,
-            headers: headersconfirm,
+            headers: headers,
             body: jsonEncode(mailBody),
           );
 

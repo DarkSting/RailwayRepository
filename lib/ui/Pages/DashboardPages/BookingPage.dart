@@ -3,11 +3,12 @@ import 'package:login_flutter/Models/TrainBookedModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:login_flutter/ui/Components/BookingCard.dart';
+import 'package:login_flutter/ui/Components/Spinners.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class BookingPage extends StatefulWidget {
   const BookingPage({super.key});
-
   @override
   State<BookingPage> createState() => _BookingPageState();
 }
@@ -16,22 +17,33 @@ class _BookingPageState extends State<BookingPage> {
 
 
   List<BookedModel> receivedBooking = [];
+  bool isLoading = true;
 
   @override
   initState(){
     super.initState();
     getBookings().then((value) {
+      isLoading = false;
       setState(() {
 
       });
     })
     .catchError((onError){
-
+      isLoading = false;
   });
 
   }
 
+  Future<String> getStoredCookies() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt') ?? '';
+
+  }
+
   Future<Map<String,dynamic>?> getBookings() async{
+
+    String storedCookies = await getStoredCookies();
 
     final url = Uri.parse('http://192.168.8.114:8080/booking/getbookings');
 
@@ -40,7 +52,7 @@ class _BookingPageState extends State<BookingPage> {
     };
 
     final body = {
-      "userID" : 200,
+      "userID" : storedCookies,
     };
 
     try{
@@ -52,7 +64,6 @@ class _BookingPageState extends State<BookingPage> {
       if(response.statusCode==200){
 
         List<dynamic> foundBookings =  jsonDecode(response.body);
-
 
         for(Map<String,dynamic> current in foundBookings){
 
@@ -106,7 +117,7 @@ class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
 
-    if(receivedBooking.isNotEmpty==true){
+    if(receivedBooking.isNotEmpty==true && !isLoading){
       List<Widget> bookinglist = getBookingList();
       return currentWidget = Expanded(child:ListView.builder(
             itemCount: bookinglist.length,
@@ -116,7 +127,14 @@ class _BookingPageState extends State<BookingPage> {
     );
 
     }
-    return currentWidget;
+    else if(receivedBooking.isEmpty==true && !isLoading){
+      return Container(
+        child: Center(
+          child: Text('No available bookings',style: Theme.of(context).textTheme.bodyMedium,),
+        ),
+      );
+    }
+    return Expanded(child: Spinner());
   }
 
 }

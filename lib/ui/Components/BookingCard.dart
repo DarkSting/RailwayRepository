@@ -24,7 +24,6 @@ class BookingCard extends StatelessWidget {
      );
      return Container(
 
-
          child:Padding(
            padding: const EdgeInsets.all(8.0),
            child: Container(
@@ -52,14 +51,7 @@ class BookingCard extends StatelessWidget {
                      crossAxisAlignment: CrossAxisAlignment.start,
                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
-                       // const Text(
-                       //   "Click to buy Fuel ",
-                       //   style: TextStyle(
-                       //       fontFamily: 'Raleway',
-                       //       color: Colors.white,
-                       //       fontSize: 25.0,
-                       //       fontWeight: FontWeight.w700),
-                       // ),
+
                        SizedBox(
                          width: MediaQuery.of(context).size.width * 0.4,
                          child: Text(

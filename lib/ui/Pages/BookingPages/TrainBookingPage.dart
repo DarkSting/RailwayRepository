@@ -141,7 +141,24 @@ class _TrainBookingPageState extends State<TrainBookingPage> {
                 ),
               ),
               const SizedBox(height: 10),
+              Container(
 
+                height: widget.height,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(
+                      color : LightColor.lightOrange,
+                      width:1.0,
+                    )
+                ),
+
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(left: 20),
+                  child: Text("Destination : ${widget.trainData.destionationStation}",style: Theme.of(context).textTheme.titleMedium,) ,
+                ),
+              ),
+              const SizedBox(height: 10),
               Container(
                 
                 padding: EdgeInsets.all(30),
